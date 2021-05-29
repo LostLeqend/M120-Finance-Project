@@ -1,0 +1,56 @@
+﻿<Window x:Class="M120_Finanz_Projekt.View.FinanzView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:menu="clr-namespace:HamburgerMenu;assembly=HamburgerMenu"
+        xmlns:userControls="clr-namespace:M120_Finanz_Projekt.View.UserControls"
+        xmlns:viewModel="clr-namespace:M120_Finanz_Projekt.ViewModel"
+        mc:Ignorable="d"
+        Width="1366" Height="768"
+        MinWidth="1024" MinHeight="600"
+        Title="Finance"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        Icon="../Assets/Images/finanz_app.png">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModel:OverviewPaymentsViewModel}">
+            <userControls:OverviewPaymentsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:OutstandingPaymentsViewModel}">
+            <userControls:OutstandingPaymentsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:AccountAssetsViewModel}">
+            <userControls:AccountAssetsView/>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <menu:HamburgerMenu Grid.Column="0" MenuIconColor="White" SelectionIndicatorColor="White" MenuItemForeground="White">
+            <menu:HamburgerMenu.Content>
+                <menu:HamburgerMenuItem Icon="../Assets/Images/overview_payments.png" Text="Overview Payments" 
+                                        SelectionCommand="{Binding OverviewPaymentsCommand}"/>
+                <menu:HamburgerMenuItem Icon="../Assets/Images/outstanding_payments.png" Text="Outstanding Payment"
+                                        SelectionCommand="{Binding OutstandingPaymentsCommand}"/>
+                <menu:HamburgerMenuItem Icon="../Assets/Images/account_assets_icon.png" Text="Account Assets"
+                                        SelectionCommand="{Binding AccountAssetsCommand}"/>
+                <menu:HamburgerMenuItem Icon="../Assets/Images/logout.png" Text="Logout"
+                                        SelectionCommand="{Binding LogoutCommand}"/>
+            </menu:HamburgerMenu.Content>
+        </menu:HamburgerMenu>
+
+        <ContentPresenter Grid.Column="1" Content="{Binding ViewModel}"/>
+    </Grid>
+</Window>

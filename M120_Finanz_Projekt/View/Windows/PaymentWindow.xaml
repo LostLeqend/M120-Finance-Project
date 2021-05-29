@@ -1,0 +1,110 @@
+﻿<Window x:Class="M120_Finanz_Projekt.View.Windows.PaymentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:converters="clr-namespace:M120_Finanz_Projekt.Converters"
+        xmlns:customControls="clr-namespace:M120_Finanz_Projekt.CustomControls"
+        mc:Ignorable="d"
+        Width="350" Height="550"
+        ResizeMode="NoResize"
+        Title="Payment"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        Icon="../../Assets/Images/finanz_app.png"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <converters:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" />
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Current Balance" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Transmitter.Balance}" IsReadOnly="True"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Amount" VerticalAlignment="Center"/>
+                <customControls:NumericTextBox Grid.Row="1" Grid.Column="1" 
+                                               Text="{Binding Payment.Amount, StringFormat={}{0:#}}" 
+                                               MaxLength="10"
+                                               Style="{StaticResource MaterialDesignTextBox}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Payment Reason" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Payment.PaymentReason}"/>
+
+                <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,15,0,0" Background="Beige"/>
+                
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Account Number" VerticalAlignment="Center" Margin="0,10,0,0"/>
+                <customControls:NumericTextBox Grid.Row="4" Grid.Column="1" 
+                                               Text="{Binding Recipient.AccountId, StringFormat={}{0:#}}" 
+                                               MaxLength="10"
+                                               IsReadOnly="{Binding HasFoundRecipient}"
+                                               Style="{StaticResource MaterialDesignTextBox}"/>
+
+                
+                <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Find" 
+                        Command="{Binding FindCommand}" Margin="0,20,0,0"
+                        Visibility="{Binding HasFoundRecipient, Converter={StaticResource InvertedBoolToVisibilityConverter}}"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Name" VerticalAlignment="Center" Margin="0,10,0,0"
+                           Visibility="{Binding HasFoundRecipient, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True"
+                         Visibility="{Binding HasFoundRecipient, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBox.Text>
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="Recipient.Firstname"/>
+                            <Binding Path="Recipient.Lastname"/>
+                        </MultiBinding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Address" VerticalAlignment="Center" Margin="0,10,0,0"
+                           Visibility="{Binding HasFoundRecipient, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True"
+                         Text="{Binding Recipient.Address}"
+                         Visibility="{Binding HasFoundRecipient, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <TextBlock Grid.Row="7" Grid.Column="0" Text="Plz/Canton" VerticalAlignment="Center" Margin="0,10,0,0"
+                           Visibility="{Binding HasFoundRecipient, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBox Grid.Row="7" Grid.Column="1" IsReadOnly="True"
+                         Visibility="{Binding HasFoundRecipient, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBox.Text>
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="Recipient.Plz"/>
+                            <Binding Path="Recipient.Canton"/>
+                        </MultiBinding>
+                    </TextBox.Text>
+                </TextBox>
+            </Grid>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <Button Content="Cancel" Command="{Binding CancelCommand}" Margin="0,0,5,0" />
+                <Button Content="Pay" Command="{Binding PayCommand}" Margin="5,0,0,0" />
+            </StackPanel>
+    </Grid>
+</Window>
